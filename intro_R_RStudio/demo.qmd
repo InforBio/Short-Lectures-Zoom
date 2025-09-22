@@ -1,0 +1,72 @@
+---
+title: "A Reproducible Report"
+subtitle: "Short-Lecture Zoom: Intro to R & RStudio"
+date: 2025-10-07
+format:
+  html: default
+  pdf: default
+embed-resources: true
+---
+
+This is a Quarto demo script.
+You can write text in markdown syntax.
+
+## Import Data
+
+```{r}
+#| label: import
+
+gene_expr <- read.csv("data/toy_DE_results.csv")
+```
+
+Preview the first lines:
+
+```{r}
+#| label: show-head
+
+head(gene_expr)
+```
+
+
+## Some Stats
+
+```{r}
+#| label: summary
+
+summary(gene_expr$log2FoldChange)
+summary(gene_expr$log2FoldChange[which(gene_expr$log2FoldChange < 0)])
+summary(gene_expr$log2FoldChange[which(gene_expr$log2FoldChange >= 0)])
+```
+
+
+## Visualisation
+
+We will generate a volcano plot to visualize the differential expression analysis results for all included genes.
+
+```{r}
+#| label: volcano
+
+library(ggplot2)
+
+ggplot(data = gene_expr, aes(x = log2FoldChange, y = -log10(fdr))) +
+  geom_point(size = 0.1, alpha = 0.7) +
+  geom_label(
+    data = dplyr::filter(gene_expr, -log10(fdr) > 40),
+    aes(label = ifelse(tair_symbol == "", ensembl_gene_id, tair_symbol))
+  ) +
+  geom_hline(
+    yintercept = -log10(0.05 / nrow(gene_expr)),
+    color = "red",
+    linetype = "dashed" 
+  ) +
+  geom_vline(xintercept = c(1.5, -1.5), linetype = "dashed") +
+  theme_light()
+```
+
+
+## Render the Report
+
+Click the Render button and you will get your report!
+
+To learn more about how it works, join the IOC R training program: 
+[Registration link](https://docs.google.com/forms/d/e/1FAIpQLSeu9Y8LRxIx1ZKT7yKdzYMduZumRe5Nov4T0JbUPN0f21daQA/viewform?usp=sharing&ouid=107366283096380377724)
