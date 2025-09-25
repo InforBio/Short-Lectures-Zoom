@@ -16,7 +16,7 @@ You can write text in markdown syntax.
 ```{r}
 #| label: import
 
-gene_expr <- read.csv("data/toy_DE_results.csv")
+penguins <- read.csv("data/penguins.csv")
 ```
 
 Preview the first lines:
@@ -24,7 +24,7 @@ Preview the first lines:
 ```{r}
 #| label: show-head
 
-head(gene_expr)
+head(penguins)
 ```
 
 
@@ -33,9 +33,7 @@ head(gene_expr)
 ```{r}
 #| label: summary
 
-summary(gene_expr$log2FoldChange)
-summary(gene_expr$log2FoldChange[which(gene_expr$log2FoldChange < 0)])
-summary(gene_expr$log2FoldChange[which(gene_expr$log2FoldChange >= 0)])
+summary(penguins)
 ```
 
 
@@ -44,22 +42,13 @@ summary(gene_expr$log2FoldChange[which(gene_expr$log2FoldChange >= 0)])
 We will generate a volcano plot to visualize the differential expression analysis results for all included genes.
 
 ```{r}
-#| label: volcano
+#| label: scatter-plot
 
 library(ggplot2)
 
-ggplot(data = gene_expr, aes(x = log2FoldChange, y = -log10(fdr))) +
-  geom_point(size = 0.1, alpha = 0.7) +
-  geom_label(
-    data = dplyr::filter(gene_expr, -log10(fdr) > 40),
-    aes(label = ifelse(tair_symbol == "", ensembl_gene_id, tair_symbol))
-  ) +
-  geom_hline(
-    yintercept = -log10(0.05 / nrow(gene_expr)),
-    color = "red",
-    linetype = "dashed" 
-  ) +
-  geom_vline(xintercept = c(1.5, -1.5), linetype = "dashed") +
+ggplot(data = penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) +
+  geom_point(alpha = 0.7) +
+  facet_grid() +
   theme_light()
 ```
 

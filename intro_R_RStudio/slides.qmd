@@ -234,135 +234,27 @@ Then click "Apply".
 :::
 
 
-# Setting Up an R Project
-
-## Create an R Project {.smaller}
-
-An R project keeps everything for your project in **one working directory**
-and helps R to know where to look for your files.
-
-. . .
-
-1. In RStudio, go to *File* -> *New Project*
-2. Choose *New Directory* and click *New Project*
-3. Set a folder name (e.g., `my_project`) and select where to save it.
-4. Click *Create Project*
-
-. . .
-
-You'll notice RStudio restarts, and now your project is set up!
-
-![](images/in_rproj.png){width=50%}
-
-::: {.notes}
-An R Project is a way to keep everything for your work (scripts, data, outputs) in one place.
-Think of it like a special folder where RStudio automatically knows where to look for your files.
-It helps avoid problems with messy file paths.
-:::
-
-
-## Create an R Project {.smaller}
-
-![](images/rstudio_workingdir.png)
-
-
-## A Well Organized Project Folder {.smaller}
-
-- Tree structure:
-
-```sh
-my_project              # Your working directory    
-├── my_project.Rproj    # The R project configuration file
-├── README.md           # A short introduction of the project
-├── data                # Raw data files
-│   └── raw_count.tsv
-├── scripts             # Your R code files
-│   └── 01-analysis.R
-│   └── 02-figures.R
-└── outputs             # Results, e.g., graphs, reports
-```
-
-. . .
-
-- Managing Files (via the *File* pane):
-  - To create a new folder: click ![](images/rstudio_create_folder_button.png){width=1cm}. The folder will be created in the current directory.
-  - To move a file or folder: check the box next to its name, click ![](images/rstudio_gear.png){width=1cm} and then select *Move...* to choose a new destination.
-
-. . .
-
-::: {.callout-note appearance="simple"}
-Check out the next short-lecture zoom: "Best practices in data science project management" (@Ivain Raslain)
-:::
-
-:::{.notes}
-example of bad home organisation: pillow in kitchen and microoven in the bathroom
-The trunk is the main folder (your R Project).
-Branches are subfolders for scripts, data, and output, ect.
-By building a clear structure, you’ll:
-Always know where to find things.
-Save time when coding in R or sharing your project with others.
-Avoid messy files scattered everywhere.
-:::
-
-
-## Understanding File Paths {.smaller}
-
-How to tell your computer where to find the `test.R`?
-
-![](images/finder_abs_path.png)
-
-. . .
-
-- **Absolute path**, starts from the very top of your computer's folder.
-*E.g.*: 
-  - Linux/Mac: `/Users/lijiao/Documents/my_project/scripts/test.R`
-  - Windows: `C:\Users\lijiao\Documents\my_project\scripts\test.R`
-
-
-## Understanding File Paths {.smaller}
-
-A **path** tells your computer where to find files/folders.
-
-- **Relative path**, starts from your working directory (folder). *E.g.*:
-  - Linux/Mac: `scripts/test.R` 
-  - Windows: `scripts\test.R`
-
-![](images/finder_rel_path.png){width=80%}
-
-
-
 # A Simple Workflow
 
 ## Import Data
 
-```{r}
-#| eval: false
-#| echo: false
-
-gene_expr <- readRDS("~/Downloads/20240523_061-arabido_twas/full_results.RDS")[["Lightexposure_Red_vs_Darkness"]]
-
-data.table::fwrite(
-  gene_expr[, c(1:3, 6, 7, 11)],
-  file = "~/Documents/short_lectures_zoom/intro_R_RStudio/data/toy_DE_results.csv"
-)
-
-```
+We'll use the [palmerpenguins](https://allisonhorst.github.io/palmerpenguins/articles/intro.html) dataset,
+which contains different measurements of three species of penguins from three islands.
+(You can get the raw data [here](https://raw.githubusercontent.com/allisonhorst/palmerpenguins/refs/heads/main/inst/extdata/penguins.csv){target="_blank"}.)
 
 ```{r}
 # import data
-gene_expr <- read.csv("data/toy_DE_results.csv")
+penguins <- read.csv("data/penguins.csv")
 
 # preview the first lines
-head(gene_expr)
+head(penguins)
 ```
 
-## Some Stats
+## Summary Statistics
 
 ```{r}
 # summary statistics
-summary(gene_expr$log2FoldChange)
-summary(gene_expr$log2FoldChange[which(gene_expr$log2FoldChange < 0)])
-summary(gene_expr$log2FoldChange[which(gene_expr$log2FoldChange >= 0)])
+summary(penguins)
 ```
 
 ## Visualisation
@@ -371,21 +263,13 @@ summary(gene_expr$log2FoldChange[which(gene_expr$log2FoldChange >= 0)])
 ::: {.column}
 ```{r}
 #| eval: false
+#| warning: false
 
 library(ggplot2)
 
-ggplot(data = gene_expr, aes(x = log2FoldChange, y = -log10(fdr))) +
-  geom_point(size = 0.1, alpha = 0.7) +
-  geom_label(
-    data = dplyr::filter(gene_expr, -log10(fdr) > 40),
-    aes(label = ifelse(tair_symbol == "", ensembl_gene_id, tair_symbol))
-  ) +
-  geom_hline(
-    yintercept = -log10(0.05 / nrow(gene_expr)),
-    color = "red",
-    linetype = "dashed" 
-  ) +
-  geom_vline(xintercept = c(1.5, -1.5), linetype = "dashed") +
+ggplot(data = penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) +
+  geom_point(alpha = 0.7) +
+  facet_grid() +
   theme_light()
 ```
 :::
@@ -397,18 +281,9 @@ ggplot(data = gene_expr, aes(x = log2FoldChange, y = -log10(fdr))) +
 
 library(ggplot2)
 
-ggplot(data = gene_expr, aes(x = log2FoldChange, y = -log10(fdr))) +
-  geom_point(size = 0.1, alpha = 0.7) +
-  geom_label(
-    data = dplyr::filter(gene_expr, -log10(fdr) > 40),
-    aes(label = ifelse(tair_symbol == "", ensembl_gene_id, tair_symbol))
-  ) +
-  geom_hline(
-    yintercept = -log10(0.05 / nrow(gene_expr)),
-    color = "red",
-    linetype = "dashed" 
-  ) +
-  geom_vline(xintercept = c(1.5, -1.5), linetype = "dashed") +
+ggplot(data = penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) +
+  geom_point(alpha = 0.7) +
+  facet_grid() +
   theme_light()
 ```
 :::
