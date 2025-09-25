@@ -3,3 +3,4 @@
 intro_R_RStudio/data
 intro_R_RStudio/*html
 renv/
+.Rproj.user
