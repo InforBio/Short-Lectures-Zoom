@@ -16,7 +16,7 @@ You can write text in markdown syntax.
 ```{r}
 #| label: import
 
-penguins <- read.csv("data/penguins.csv")
+penguins <- read.csv("https://raw.githubusercontent.com/allisonhorst/palmerpenguins/refs/heads/main/inst/extdata/penguins.csv")
 ```
 
 Preview the first lines:
@@ -33,6 +33,7 @@ head(penguins)
 ```{r}
 #| label: summary
 
+dim(penguins)
 summary(penguins)
 ```
 
@@ -46,10 +47,15 @@ We will generate a volcano plot to visualize the differential expression analysi
 
 library(ggplot2)
 
-ggplot(data = penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) +
-  geom_point(alpha = 0.7) +
-  facet_grid() +
-  theme_light()
+ggplot(
+  data = penguins,
+  aes(
+    x = bill_length_mm,
+    y = flipper_length_mm,
+    color = species
+  )
+) +
+  geom_point()
 ```
 
 

@@ -85,7 +85,7 @@ The official website: <https://www.r-project.org>
 ![](images/r_console.png)
 :::
 
-::: {.column .incremental}
+::: {.column .fragment .incremental}
 In the R console:
 
 - **`>`** (The prompt): R is ready for your command.
@@ -106,14 +106,6 @@ You can either finish it by typing the rest of the code or press the Esc key to 
 
 
 # Rstudio
-
-## Rstudio Login {.smaller}
-
-If you use the RStudio Server, you need to connect to your account first.  
-
-![](images/rstudio_server_login.png)
-
-(Or if you are using IFB RStudio server, connect to your IFB account and create an RStudio session.)
 
 ## Rstudio {.smaller}
 
@@ -141,6 +133,15 @@ Everything you need in one organized window.
 Save your work as a script, RStudio includes many useful features which let us code easily.
 notebook, show results
 :::
+
+
+## Rstudio Login {.smaller}
+
+If you use the RStudio Server, you need to connect to your account first.  
+
+![](images/rstudio_server_login.png)
+
+(Or if you are using IFB RStudio server, connect to your IFB account and create an RStudio session.)
 
 
 ## Rstudio Server {.smaller}
@@ -199,94 +200,149 @@ library(stats)
 q()
 ```
 
+# Setting Up an R Project
 
-## Some Configuration {.smaller}
+## Create an R Project {.smaller}
 
-Go to *Tools* -> *Global Options...*
+An R project keeps everything for your project in **one working directory**
+and helps R to know where to look for your files.
+
+. . .
+
+1. In RStudio, go to *File* -> *New Project*
+2. Choose *New Directory* and click *New Project*
+3. Set a folder name (e.g., `r_week1`) and select where to save it.
+4. Click *Create Project*
+
+. . .
+
+You'll notice RStudio restarts, and now your project is set up!
+
+![](images/in_rproj.png){width=50%}
+
+::: {.notes}
+An R Project is a way to keep everything for your work (scripts, data, outputs) in one place.
+Think of it like a special folder where RStudio automatically knows where to look for your files.
+It helps avoid problems with messy file paths.
+:::
+
+
+## Create an R Project {.smaller}
+
+![](images/rstudio_workingdir.png)
+
+
+## A Well Organized Project Folder {.smaller}
+
+- Tree structure:
+
+```sh
+r_week1                 # Your working directory    
+├── r_week1.Rproj       # The R project configuration file
+├── README.md           # A short introduction of the project
+├── data                # Raw data files
+│   └── penguins.csv
+├── scripts             # Your R code files
+│   └── 01-analysis.R
+│   └── 02-figures.R
+└── outputs             # Results, e.g., graphs, reports
+```
+
+. . .
+
+- Managing Files (via the *File* pane):
+  - To create a new folder: click ![](images/rstudio_create_folder_button.png){width=1cm}. The folder will be created in the current directory.
+  - To move a file or folder: check the box next to its name, click ![](images/rstudio_gear.png){width=1cm} and then select *Move...* to choose a new destination.
+
+. . .
+
+::: {.callout-note appearance="simple"}
+Check out the next short-lecture zoom: "Best practices in data science project management" (@Ivain Raslain)
+:::
+
+
+## How To Import Data?
 
 ::: columns
-::: {.column width="50%"}
-- Under the *General* tab:
+::: {.column style="font-size: 80%;"}
 
-  - Uncheck the box "Restore .RData..."
-  - Set "Save workspace to .RData on exit" to **Never**.
+- Supported formats:  
+  - text files (.txt, .csv, *etc.*)
+  - Excel files
+  - data from other softwares (*e.g.*: SAS)
 
-Then click "Apply".
+- Import by clicking: 
+  - Menu bar *File* -> *Import Dataset* -> Select the format -> Choose your file
 :::
 
-::: {.column width="50%"}
-![](images/rstudio_setting1.png)
-:::
-:::
-
-## Some Configuration {.smaller}
-
-Go to *Tools* -> *Global Options...*
-
-::: columns
-::: {.column width="50%"}
-
-- Under the *Code* tab:
-
-In the *Display* panel, check the box "Use rainbow parentheses"
-
-Then click "Apply".
-:::
-
-::: {.column width="50%"}
-![](images/rstudio_setting2.png)
+::: {.column .fragment}
+![](images/import_data_base.png)
 :::
 :::
 
-## Some Configuration {.smaller}
 
-Go to *Tools* -> *Global Options...*
+## Understanding File Paths {.smaller}
 
-::: columns
-::: {.column width="50%"}
-- Under the *Appearance* tab:
+How to tell your computer where to find the `penguins.csv`?
 
-You can select a theme for you RStudio, e.g., the "Cobalt" for a dark theme.
+![](images/finder_abs_path.png){.nostretch}
 
-- Under the *Pane Layout* tab:
+. . .
 
-You can arrange the four panels as you prefer.
+- **Absolute path**, starts from your computer's root (top-level) folder.
+*E.g.*: 
+  - Linux/Mac: `/Users/lijiao/Documents/r_week1/data/penguins.csv`
+  - Windows: `C:\Users\lijiao\Documents\r_week1\data\penguins.csv`
 
-In addition, click "Add Column" lets you open an extra "Source" code column, allowing you to view your scripts side by side!
+. . .
 
-Then click "Apply".
-:::
+```r
+read.csv("/Users/lijiao/Documents/r_week1/data/penguins.csv")
+```
 
-::: {.column width="50%"}
-![](images/rstudio_setting3.png)
-:::
-:::
+## Understanding File Paths {.smaller}
 
+A **path** tells your computer where to find files/folders.
+
+- **Relative path**, starts from your working directory (folder). *E.g.*:
+  - Linux/Mac: `data/penguins.csv` 
+  - Windows: `data\penguins.csv`
+
+![](images/finder_rel_path.png){width=80% .nostretch}
+
+. . .
+
+```r
+read.csv("data/penguins.csv")
+```
 
 # A Simple Workflow
 
-## Import Data
+## Import Data {.smaller}
 
 We'll use the [palmerpenguins](https://allisonhorst.github.io/palmerpenguins/articles/intro.html) dataset,
 which contains different measurements of three species of penguins from three islands.
 (You can get the raw data [here](https://raw.githubusercontent.com/allisonhorst/palmerpenguins/refs/heads/main/inst/extdata/penguins.csv){target="_blank"}.)
 
 ```{r}
-# import data
+# import data using url
 penguins <- read.csv("https://raw.githubusercontent.com/allisonhorst/palmerpenguins/refs/heads/main/inst/extdata/penguins.csv")
 
 # preview the first lines
 head(penguins)
 ```
 
-## Summary Statistics
+## Summary Statistics {.smaller}
 
 ```{r}
+# data dimension
+dim(penguins)
+
 # summary statistics
 summary(penguins)
 ```
 
-## Visualisation
+## Visualisation {.smaller}
 
 ::: {.columns}
 ::: {.column}
@@ -296,10 +352,15 @@ summary(penguins)
 
 library(ggplot2)
 
-ggplot(data = penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) +
-  geom_point(alpha = 0.7) +
-  facet_grid() +
-  theme_light()
+ggplot(
+  data = penguins,
+  aes(
+    x = bill_length_mm,
+    y = flipper_length_mm,
+    color = species
+  )
+) +
+  geom_point()
 ```
 :::
 
@@ -311,15 +372,21 @@ ggplot(data = penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = s
 library(ggplot2)
 
 ggplot(data = penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) +
-  geom_point(alpha = 0.7) +
-  facet_grid() +
-  theme_light()
+  geom_point() +
+  theme(
+    axis.title = element_text(size = rel(2)),
+    axis.text = element_text(size = rel(2)),
+    strip.text = element_text(size = rel(2)),
+    plot.title = element_text(size = rel(2.5)),
+    legend.text = element_text(size = rel(2)),
+    legend.title = element_text(size = rel(2))
+  )
 ```
 :::
 :::
 
 
-## Generate A Report
+## Generate a Report {.smaller}
 
 Let's generate a quick report using Quarto ;)
 
@@ -336,12 +403,16 @@ Let's generate a quick report using Quarto ;)
 - 10 sessions of 3 hours with 3 in-person
 - Personalized follow-up
 
+<div style="position:absolute; bottom:1em; right:1em;">
+  ![More About IOC ☝️](images/qrcode_info_ioc.png){width=250px style="border-radius:12px;"}
+</div>
+
 
 ## Take Home Messages
 
-- R + RStudio = reproducible, flexible, free for data science
-- Upcoming training IOC **R for data science** (November to January) and **single cell analysis** (March to June)!
+- R + RStudio = free, powerful, reproducible
+- Upcoming IOC **R for data science** (November to January) and **single cell RNAseq** (March to June)!
 
-:::{.callout-tip title="IOC R and scRNAseq"}
-Registration is opened: [link](https://docs.google.com/forms/d/e/1FAIpQLSeu9Y8LRxIx1ZKT7yKdzYMduZumRe5Nov4T0JbUPN0f21daQA/viewform?usp=sharing&ouid=107366283096380377724)
-:::
+<div style="position:absolute; bottom:2em; right:3em;">
+  ![IOC Registration ☝️](images/qrcode_ioc.png){width=250px style="border-radius:12px;"}
+</div>
