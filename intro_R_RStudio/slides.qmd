@@ -19,6 +19,35 @@ execute:
   echo: true
 ---
 
+## 👋 Aboute Me {.smaller}
+
+Lijiao NING - Statistical Engineer (CNRS)
+
+<div style="position:absolute; top:1em; right:3em;">
+  ![](images/photo_lijiao.png){width=150px style="border-radius:12px;"}
+</div>
+
+<br>
+
+#### 🎓 Training & Work
+
+- Master’s in biostatistics (2016 @University Lyon 1)
+- European Genomic Institute for Diabetes (2016 - 2023 @Lille)
+- Institute of Biology Paris-Seine (2023 - present)
+
+#### 🧬 What I Do
+
+- Analyze biological and multi-omics data (genotype, DNA methylation, RNA-seq, ChipSeq, *etc.*)
+- Develop analysis pipelines in R
+- Train biologists to use R for data analysis
+
+:::{.notes}
+Why I'm Here
+- Help biologists turn data into insight
+- Share practical R skills
+- (Make R less scary and more fun!)
+:::
+
 # Why R for Biology? ![](images/R_logo.png){width=2.7cm}
 
 ## Welcome to R! {.smaller}
@@ -244,7 +273,7 @@ which contains different measurements of three species of penguins from three is
 
 ```{r}
 # import data
-penguins <- read.csv("data/penguins.csv")
+penguins <- read.csv("https://raw.githubusercontent.com/allisonhorst/palmerpenguins/refs/heads/main/inst/extdata/penguins.csv")
 
 # preview the first lines
 head(penguins)
