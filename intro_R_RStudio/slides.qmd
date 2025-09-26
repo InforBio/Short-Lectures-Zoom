@@ -24,7 +24,7 @@ execute:
 Lijiao NING - Statistical Engineer (CNRS)
 
 <div style="position:absolute; top:1em; right:3em;">
-  ![](images/photo_lijiao.png){width=150px style="border-radius:12px;"}
+  ![](images/photo_ljn.png){width=150px style="border-radius:12px;"}
 </div>
 
 <br>
